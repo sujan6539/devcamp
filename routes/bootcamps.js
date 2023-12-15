@@ -8,12 +8,14 @@ const {
   deleteBootcamp,
 } = require("../controllers/bootcamps");
 
-router.route("/").get(getBootcamps).post(createBootcamps);
+const auth = require('../middleware/auth')
+
+router.route("/").get(auth, getBootcamps).post(auth, createBootcamps);
 
 router
   .route("/:id")
-  .put(updateBootcamps)
-  .get(getBootcamp)
-  .delete(deleteBootcamp);
+  .put(auth, updateBootcamps)
+  .get(auth, getBootcamp)
+  .delete(auth, deleteBootcamp);
 
 module.exports = router;

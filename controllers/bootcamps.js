@@ -3,10 +3,38 @@ const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse");
 
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  const bootcamps = await Bootcamp.find();
+  let query;
+  let newQuery = JSON.stringify(req.query);
+  newQuery = newQuery.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+  query = Bootcamp.find(JSON.parse(newQuery));
+
+  const bootcamps = await query;
+  const limit = 1;
+  let currentpage = 0;
+  let pages;
+
+  if (currentpage > 0 && currentpage < bootcamps.length) {
+    pages = {
+      previous: currentpage--,
+      next: currentpage++,
+    };
+  } else if (currentpage == bootcamps.length) {
+    pages = {
+      previous: currentpage--,
+    };
+  } else {
+    pages = {
+      next: currentpage++,
+    };
+  }
+
   res.status(200).json({
     success: true,
     count: bootcamps.length,
+    pagination: pages,
     data: bootcamps,
   });
 });

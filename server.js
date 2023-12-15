@@ -13,6 +13,7 @@ dotenv.config({ path: "./config/config.env" });
 connectDB();
 
 const bootcamps = require("./routes/bootcamps");
+const user = require('./routes/auth')
 
 app.use(express.json());
 
@@ -23,6 +24,7 @@ if ((NODE_ENV = "development")) {
 
 //mount router
 app.use("/api/v1/bootcamps", bootcamps);
+app.use('/api/v1/user', user)
 
 // mount error logging middleware
 app.use(logError);
