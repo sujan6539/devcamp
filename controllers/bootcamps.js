@@ -52,6 +52,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 
 exports.createBootcamps = asyncHandler(async (req, res, next) => {
   const bootcamp = Bootcamp(req.body);
+  bootcamp.userId = req.user.id
   await bootcamp.save();
   res.status(200).json({
     success: true,

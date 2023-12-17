@@ -11,7 +11,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   const user = req.body;
   const u = await User.create(user);
 
-  const token = getToken(res, u)
+  const token = getToken(res, u);
 
   res.status(200).send({
     msg: "Success",
@@ -41,11 +41,16 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!isMatch) {
     return next(new ErrorResponse("Authentication Failed", 204));
   }
-  const token = getToken(res, user)
+  const token = getToken(res, user);
   res.status(200).send({
     msg: "Success",
     token: token,
   });
+});
+
+exports.logout = asyncHandler(async (req, res, next) => {
+  // Respond with a success message
+  res.json({ message: "Logout successful" });
 });
 
 function getToken(res, user) {
