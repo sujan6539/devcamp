@@ -9,7 +9,9 @@ const bcrypt = require("bcryptjs");
 // @access PUBLIC
 exports.register = asyncHandler(async (req, res, next) => {
   const user = req.body;
-  await User.create(user);
+  const u = await User.create(user);
+
+  const token = getToken(res, u)
 
   res.status(200).send({
     msg: "Success",
@@ -39,10 +41,17 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!isMatch) {
     return next(new ErrorResponse("Authentication Failed", 204));
   }
-
-  const token = user.getJWT();
+  const token = getToken(res, user)
   res.status(200).send({
     msg: "Success",
     token: token,
   });
 });
+
+function getToken(res, user) {
+  const token = user.getJWT();
+  res.cookie("token", token, {
+    expire: 24 * 60 * 60 * 1000,
+  });
+  return token;
+}

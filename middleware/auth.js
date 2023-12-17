@@ -11,11 +11,12 @@ const auth = asyncHandler(async (req, res, next) => {
 
   const token = auth.split(" ")[1];
 
-  jwt.verify(token, process.env.JWT_PRIVATE_KEY, (err) => {
+  const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY, (err) => {
     if (err) {
       return next(new ErrorResponse("not authorized", 401));
     }
   });
+  req.user = await User.findById(decoded.id);
   next();
 });
 

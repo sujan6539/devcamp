@@ -42,7 +42,7 @@ UserSchema.methods.getJWT = function () {
   const token = jwt.sign({ id: this._id }, process.env.JWT_PRIVATE_KEY, {
     expiresIn: process.env.JWT_EXPIRE,
   });
-  console.log(token);
+
   return token;
 };
 
